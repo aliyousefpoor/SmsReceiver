@@ -8,10 +8,21 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 import android.util.Log;
 import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+
 
 public class BroadCastReceiver extends BroadcastReceiver {
+
+
+    private void sendBroadCast(Context context,String text) {
+    Intent intent = new Intent("smsReceiver");
+    intent.putExtra("message", text);
+    LocalBroadcastManager.getInstance(context).sendBroadcast(intent) ;
+
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -29,7 +40,8 @@ public class BroadCastReceiver extends BroadcastReceiver {
                         msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
                         msg_from = msgs[i].getOriginatingAddress();
                         String msgBody = msgs[i].getMessageBody();
-                        // textView.setText(msgBody);
+                        sendBroadCast(context,msgBody);
+
 
                         Toast.makeText(context, msgBody, Toast.LENGTH_LONG).show();
                     }
